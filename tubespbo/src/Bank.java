@@ -69,6 +69,14 @@ class Homepage{
         tarikuang.setBounds(150, 205, 200, 25);
         tarikuang.setFocusable(false);
         tarikuang.setBackground(Color.orange);
+        tarikuang.addActionListener
+                (new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        frame.dispose();
+                        Tarik tarik = new Tarik();
+                    }
+                });
 
 
         info.setBounds(150, 240, 200, 25);
@@ -115,6 +123,7 @@ class Homepage{
 class Setor extends Bank{
     JFrame framesetor = new JFrame("Telyu Bank - Setor Tunai");
     JLabel text = new JLabel("<html><head><style>div {text-align: center;}<div>Telyu Bank Apps. Kemudahan untuk anda!<br/>Menu : Setor Tunai </div></html>");
+    JLabel setorlbl = new JLabel("Setor Tunai sejumlah: ");
     JTextField setorField = new JTextField();
     JButton setorButton = new JButton("Setor Uang");
     JButton kembali = new JButton("Kembali");
@@ -127,12 +136,16 @@ class Setor extends Bank{
 //        framesetor.setResizable(false);
         framesetor.setVisible(true);
 
-        text.setBounds(150, 15, 800, 100);
+        text.setBounds(150, 50, 800, 100);
         text.setFont(new Font("Verdana",Font.BOLD, 20));
         text.setForeground(Color.WHITE);
 
+        setorlbl.setBounds(295, 215, 200, 25);
+        setorlbl.setFont(new Font("Verdana",Font.PLAIN, 15));
+        setorlbl.setForeground(Color.WHITE);
+
         setorField.setText("500000");
-        setorField.setBounds(285, 150, 200, 25);
+        setorField.setBounds(285, 250, 200, 25);
         // setorField.setFont(new Font("Verdana",Font.ITALIC, 25));
         setorField.setBackground(Color.orange);
 
@@ -148,9 +161,10 @@ class Setor extends Bank{
                             String sText = setorField.getText();
                             Integer setorInteger = Integer.parseInt(sText);
                             Bank.saldoTotal = Bank.saldoTotal + setorInteger;
-                            JOptionPane.showMessageDialog(null, "Setor Tunai Berhasil, Anda akan diarahkan ke Menu Check Saldo", "Setor Tunai Berhasil", JOptionPane.PLAIN_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Setor Tunai Berhasil, Saldo Anda sekarang : Rp."+ Bank.saldoTotal, "Setor Tunai Berhasil", JOptionPane.PLAIN_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Kode Setor Tunai dikirim melalui SMS", "Setor Tunai Berhasil", JOptionPane.INFORMATION_MESSAGE);
                             framesetor.dispose();
-                            SaldoGUI saldo = new SaldoGUI();
+                            Homepage homepage1 = new Homepage();
                         }
                         // Homepage homepage1 = new Homepage();
                     }
@@ -170,8 +184,8 @@ class Setor extends Bank{
                 });
 
         framesetor.add(text);
+        framesetor.add(setorlbl);
         framesetor.add(setorField);
-        // framesetor.add(saldo);
         framesetor.add(setorButton);
         framesetor.add(kembali);
     }
@@ -303,8 +317,28 @@ class Transfer extends Bank{
                 (new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        frametransfer.dispose();
-                        Homepage homepage1 = new Homepage();
+                        Bank.rekening = rekeningField.getText();
+                        String transferString = transferField.getText();
+                        Integer transferInteger = Integer.parseInt(transferString);
+                        
+                        if(Bank.saldoTotal > transferInteger){
+                            Integer option = JOptionPane.showConfirmDialog(null, 
+                            "Yakin akan mengirim "+ Bank.rekening+" sebesar Rp" + transferString + "?",
+                            "Konfirmasi Setor Tunai", 
+                            JOptionPane.YES_NO_OPTION);
+                            if(option == 0){
+                                Bank.saldoTotal = Bank.saldoTotal - transferInteger;
+                                JOptionPane.showMessageDialog(null, "Transfer Berhasil, Saldo Anda sekarang : Rp." + Bank.saldoTotal, "Transfer Berhasil", JOptionPane.PLAIN_MESSAGE);
+                                frametransfer.dispose();
+                                Homepage homepage1 = new Homepage();
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Transfer Gagal, Saldo Anda tidak mencukupi", "Transfer Gagal", JOptionPane.WARNING_MESSAGE);
+                        }
+                        
+                       
+                        // frametransfer.dispose();
+                        // Homepage homepage1 = new Homepage();
                     }
                 });
 
@@ -330,6 +364,86 @@ class Transfer extends Bank{
         frametransfer.add(kembali);
         
 
+    }
+
+}
+
+class Tarik extends Bank{
+    JFrame frametarik = new JFrame("Telyu Bank - Tarik Tunai");
+    JLabel text = new JLabel("<html><head><style>div {text-align: center;}<div>Telyu Bank Apps. Kemudahan untuk anda!<br/>Menu : Tarik Tunai </div></html>");
+    JLabel tariklbl = new JLabel("Tarik Tunai Sebesar : ");
+    JTextField tarikField = new JTextField();
+    JButton tarikButton = new JButton("Tarik Tunai");
+    JButton kembali = new JButton("Kembali");
+
+    Tarik(){
+        frametarik.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frametarik.getContentPane().setBackground(new Color(210, 4, 45));
+        frametarik.setSize(800,600);
+        frametarik.setLayout(null);
+//        frametarik.setResizable(false);
+        frametarik.setVisible(true);
+
+        text.setBounds(150, 50, 800, 100);
+        text.setFont(new Font("Verdana",Font.BOLD, 20));
+        text.setForeground(Color.WHITE);
+
+        tariklbl.setBounds(295, 215, 200, 25);
+        tariklbl.setFont(new Font("Verdana",Font.PLAIN, 15));
+        tariklbl.setForeground(Color.WHITE);
+
+        tarikField.setText("50000");
+        tarikField.setBounds(285, 250, 200, 25);
+        // tarikField.setFont(new Font("Verdana",Font.ITALIC, 25));
+        tarikField.setBackground(Color.orange);
+
+        tarikButton.setBounds(285, 365, 200, 25);
+        tarikButton.setFocusable(false);
+        tarikButton.setBackground(Color.orange);
+        tarikButton.addActionListener
+                (new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String tarikString = tarikField.getText();
+                        Integer tarikInteger = Integer.parseInt(tarikString);
+                        if(Bank.saldoTotal > tarikInteger){
+                            if(tarikInteger >= 50000){
+                                Integer option = JOptionPane.showConfirmDialog(null, "Anda akan menarik uang sebesar Rp." + tarikInteger,"Konfirmasi Tarik Tunai", JOptionPane.YES_NO_OPTION);
+                                if (option == 0){
+                                    Bank.saldoTotal = Bank.saldoTotal - tarikInteger;
+                                    JOptionPane.showMessageDialog(null, "Tarik Tunai Berhasil, Saldo Anda sekarang : Rp."+ Bank.saldoTotal, "Tarik Tunai Berhasil", JOptionPane.PLAIN_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "Kode Tarik Tunai dikirim melalui SMS", "Tarik Tunai Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                                    frametarik.dispose();
+                                    Homepage homepage1 = new Homepage();
+                                }
+                        // Homepage homepage1 = new Homepage();
+                            }else{
+                                JOptionPane.showMessageDialog(null, "Tarik Tunai Gagal, Minimal Tarik Tunai : Rp50000", "Tarik Tunai Gagal", JOptionPane.WARNING_MESSAGE);
+                            }
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Tarik Tunai Gagal, Saldo Anda tidak mencukupi", "Tarik Tunai Gagal", JOptionPane.WARNING_MESSAGE);
+                        }
+                }
+                });
+        
+
+        kembali.setBounds(285, 400, 200, 25);
+        kembali.setFocusable(false);
+        kembali.setBackground(Color.orange);
+        kembali.addActionListener
+                (new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        frametarik.dispose();
+                        Homepage homepage1 = new Homepage();
+                    }
+                });
+
+        frametarik.add(text);
+        frametarik.add(tariklbl);
+        frametarik.add(tarikField);
+        frametarik.add(tarikButton);
+        frametarik.add(kembali);
     }
 
 }
@@ -438,7 +552,8 @@ class Pin{
 
 public class Bank {
     // public Integer saldoAwal = 0;
-    public  static Integer saldoTotal = 0;
+    public static Integer saldoTotal = 0;
+    public static String rekening;
     
 
 
